@@ -141,7 +141,7 @@ def compute_metrics(preds, labels):
         [label_list[l] for (p, l) in zip(prediction, label) if l != -100]
         for prediction, label in zip(preds, labels)
     ]
-    return metric.compute(predictions=true_predictions, references=true_labels, zero_division = 1e-6)
+    return metric.compute(predictions=true_predictions, references=true_labels, ~`` = 1e-6)
 
 def load_data(args):
     '''
