@@ -30,5 +30,7 @@ RUN ["wandb", "offline"]
 # RUN ["python3", "spacy", "init", "fill-config", "base_config.cfg", "config.cfg"]
 # CMD ["python3", "-m", "spacy", "train", "$CONFIG_FILE", "--output", "$MODEL_DIR", \
 # "--paths.train", "$TRAIN_DATA", "--paths.dev", "$DEV_DATA"]
-CMD python -m spacy train ./config.cfg --output ${MODEL_DIR} --paths.train ./train.spacy --paths.dev ./dev.spacy
+RUN pip3 install awscli
+CMD /train/spacy_wrapper.sh
+
 
