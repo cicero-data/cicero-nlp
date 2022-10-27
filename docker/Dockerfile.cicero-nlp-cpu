@@ -1,0 +1,15 @@
+# syntax=docker/dockerfile:1
+
+FROM azavea/spacy-cpu
+
+WORKDIR /train
+
+COPY address/ /train/address
+COPY email/ /train/email
+COPY spacy-wrapper-cpu.sh /train/spacy-wrapper-cpu.sh
+
+## set up wandb
+RUN ["wandb", "login", "1b07bca30600e9459ea297f08870c2f3da0c4c52"]
+RUN ["wandb", "offline"]
+
+ENTRYPOINT /train/spacy-wrapper-cpu.sh
