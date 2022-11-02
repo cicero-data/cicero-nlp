@@ -72,3 +72,11 @@ In the container, run:
 ```bash
 python -m spacy train <path to the config file> --output <path to save models> --paths.train <path to the train set> --paths.dev <path to the dev set> --gpu-id 0
 ```
+
+### Run the container with using Nvidia GPUs
+
+The below command will the image we just built in a container and lead you inside the container.
+
+```bash
+docker run -ti --runtime=nvidia -v <where you save your training files>:/train --entrypoint bash azavea/cicero-nlp-gpu
+```
