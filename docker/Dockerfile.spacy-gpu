@@ -1,0 +1,8 @@
+# syntax=docker/dockerfile:1
+
+FROM pytorch/pytorch:1.12.1-cuda11.3-cudnn8-runtime
+
+COPY requirements.txt requirements.txt
+RUN  pip3 install cupy-cuda11x==11.2.0 && \
+     pip3 install -r requirements.txt && \
+     rm requirements.txt

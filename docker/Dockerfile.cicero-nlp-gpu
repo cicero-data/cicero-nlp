@@ -1,0 +1,15 @@
+# syntax=docker/dockerfile:1
+
+FROM azavea/spacy-gpu
+
+WORKDIR /train
+
+COPY ./address /train/address
+COPY ./email /train/email
+COPY spacy-wrapper-gpu.sh /train/spacy-wrapper-gpu.sh
+
+## set up wandb
+RUN ["wandb", "login", "1b07bca30600e9459ea297f08870c2f3da0c4c52"]
+RUN ["wandb", "offline"]
+
+ENTRYPOINT /train/spacy-wrapper-gpu.sh
