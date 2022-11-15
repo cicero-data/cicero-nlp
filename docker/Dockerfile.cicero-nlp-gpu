@@ -8,11 +8,11 @@ COPY ./address /train/address
 COPY ./email /train/email
 COPY ./comparison /train/comparison
 COPY spacy-wrapper-gpu.sh /train/spacy-wrapper-gpu.sh
-COPY ./start.py /train/start.py
+COPY ./startup.py /train/startup.py
 
 ## set up wandb
 RUN ["wandb", "login", "1b07bca30600e9459ea297f08870c2f3da0c4c52"]
 RUN ["wandb", "offline"]
-RUN ["python","start.py"]
+RUN ["python","startup.py"]
 
 ENTRYPOINT /train/spacy-wrapper-gpu.sh

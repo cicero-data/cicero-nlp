@@ -4,6 +4,6 @@ spacy==3.4.1
 spacy-legacy==3.0.10
 spacy-loggers==1.0.3
 spacy-transformers==1.1.8
-transformers==4.24.0
+transformers==4.21.0
 wandb==0.13.4
 awscli==1.25.93
