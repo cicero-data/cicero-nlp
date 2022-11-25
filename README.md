@@ -1,4 +1,14 @@
-# cicero-nlp
+# Cicero-NLP
+
+General Goal: develop model(s) to extract information from the politician's website.
+
+## Data
+
+[TO-DO: write a brief introduction to the Cicero Data]
+
+The Cicero dataset is a large dataset that contains extensive information for the politicans, including their full names, contact information, and etc. The dataset is made by human annotation. It also contain the address for the their website, which is the very source that information came from.
+
+Our interested information are well stored in the
 
 ## Training Model on Spacy
 
@@ -28,6 +38,7 @@ To have a better track of your training results and increase the reproducibility
 You can add the fellowing codes at the very end of the `base_config.cfg file` to achieve the functionality.
 
 ```
+[training.logger]
 @loggers = "spacy.WandbLogger.v3"
 project_name = "spacy_merge_model"
 model_log_interval = 1000
