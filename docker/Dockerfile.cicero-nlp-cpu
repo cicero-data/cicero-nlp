@@ -5,8 +5,6 @@ FROM azavea/cicero:spacy-cpu0
 RUN mkdir -p /train-on-batch/output && mkdir -p /train/output
 WORKDIR /train
 
-COPY address/ /train/address
-COPY email/ /train/email
 COPY spacy-wrapper-cpu.sh /train/spacy-wrapper-cpu.sh
 
 ## set up wandb
