@@ -1,9 +1,5 @@
 # Cicero-NLP
 
-TO-DOs
-
-1. create a folder that contains cfg files
-2. test the developing codes
 
 ## The Cicero Dataset
 
@@ -27,9 +23,9 @@ We have conduct three steps of data processing to make the Cicero dataset ready 
 
 The codes for conducting these three steps can be found in the [developing_codes](??).
 
-## Training Models with spaCy 
+## Training Models with spaCy
 
-There are four components needed for training an Name Entity Recognition(NER) model using [spaCy](https://spacy.io/) library. 
+There are four components needed for training an Name Entity Recognition(NER) model using [spaCy](https://spacy.io/) library.
 
 1. base_config.cfg
 2. config.cfg
