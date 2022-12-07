@@ -7,6 +7,7 @@ import collections
 import os
 import glob
 from tqdm import tqdm
+from bs4 import BeautifulSoup
 import argparse
 
 def get_parser(
@@ -33,7 +34,7 @@ def remove_tags(html):
     soup = BeautifulSoup(html, "html.parser")
   
     for data in soup(['style', 'script']):
-        # Remove tags
+        # Remove style and script part
         data.decompose()
   
     # return data by retrieving the tag content
@@ -42,14 +43,14 @@ def remove_tags(html):
 
 def clean_and_save(args):
     # create the cleaned webpages
-    cleaned_webpages = collections.defaultdict(dict)
+    cleaned_webpages = collections.defaultdict()
 
     # clean the webpages
     for file in tqdm(glob.glob(f"{args.input}/*.html")):
         politician_id = file.split("/")[-1].split(".")[0]
         with open(file, "r") as f:
             html = f.read()
-            cleaned_webpages[politician_id]["html"] = remove_tags(html)
+            cleaned_webpages[politician_id] = remove_tags(html)
     
     # save the cleaned webpages
     with open(args.output, "w") as f:

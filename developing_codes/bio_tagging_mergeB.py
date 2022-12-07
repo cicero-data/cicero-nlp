@@ -2,12 +2,15 @@
 This file is used to BIO tagging on the pure texts for the modelB, which convers information including saluation,
 party, state, county, and city. The output file will be in the format of spaCy Doc file.
 
+The output file will be in the format of spaCy Doc file.
+
 special tricks applied: 
 1. use the external file that stores the US states information to tag the abbreviation and full name of the state information.
     the abbreviation will be taged as "STATE", and the full name will be taged as "STATE_F".
 
 special dependencies:
 1. the external file that stores the US states information
+
 '''
 
 import spacy
@@ -53,7 +56,7 @@ def get_parser(
     parser.add_argument(
         "--ratio",
         type=float,
-        default=0.2,
+        default=0.1,
         help="the ratio of the dev set",
     )
     return parser
@@ -63,18 +66,19 @@ def bio_tag(args):
     if not os.path.exists(args.output):
         os.makedirs(args.output)
 
+    # load the Cicero dataset
+    cicero_df = pd.read_csv(args.input_csv,  error_bad_lines=False)
+
+
+    # load the pure texts of the webpages
+    with open(args.input_json, "r") as f:
+        pure_text_dict = json.load(f)    
+
     # load the external file that stores the US states information
     state_df = pd.read_csv(args.state)
     state_abbr = state_df["abbreviation"].tolist()
     state_full = state_df["full_name"].tolist()
     state_dict = dict(zip(state_abbr, state_full))
-
-    # load the Cicero dataset
-    cicero_df = pd.read_csv(args.input_csv)
-
-    # load the pure texts of the webpages
-    with open(args.input_json, "r") as f:
-        pure_text_dict = json.load(f)
 
     # bio tagging
     # the output will be stored in the list first and then save as the spaCy Doc file
@@ -109,37 +113,37 @@ def bio_tag(args):
             bio_tag_pattern_list.append({"label": "STATE", "pattern": state})
             # get the full name of the state
             if state in state_abbr:
-                state_full = state_dict[state]
+                state_full_name = state_dict[state]
                 bio_tag_pattern_list.append({"label":'STATE_F', 'pattern':[{'LOWER':state_full_name.lower()}]})
 
-        if "seconday_state" in information_unit.keys():
-            state = information_unit["seconday_state"]
+        if "secondary_state" in information_unit.keys():
+            state = information_unit["secondary_state"]
             bio_tag_pattern_list.append({"label": "STATE", "pattern": state})
             # get the full name of the state
             if state in state_abbr:
-                state_full = state_dict[state]
+                state_full_name = state_dict[state]
                 bio_tag_pattern_list.append({"label":'STATE_F', 'pattern':[{'LOWER':state_full_name.lower()}]})
 
         if "primary_county" in information_unit.keys():
             county = information_unit["primary_county"]
             bio_tag_pattern_list.append({"label": "COUNTY", "pattern": county})
         
-        if "seconday_county" in information_unit.keys():
-            county = information_unit["seconday_county"]
+        if "secondary_county" in information_unit.keys():
+            county = information_unit["secondary_county"]
             bio_tag_pattern_list.append({"label": "COUNTY", "pattern": county})
 
         if "primary_city" in information_unit.keys():
             city = information_unit["primary_city"]
             bio_tag_pattern_list.append({"label": "CITY", "pattern": city})
 
-        if "seconday_city" in information_unit.keys():
-            city = information_unit["seconday_city"]
+        if "secondary_city" in information_unit.keys():
+            city = information_unit["secondary_city"]
             bio_tag_pattern_list.append({"label": "CITY", "pattern": city})
         
         ruler.add_patterns(bio_tag_pattern_list)
         doc = nlp(pure_text)
         length = len(doc)//100
-        for i in range(length+1):
+        for n in range(length+1):
             sub_doc = nlp(str(doc[n*100:(n+1)*100]))
             # the filter_spans function is used to remove the overlapping entities
             sub_doc.ents = filter_spans(sub_doc.spans["ruler"])
