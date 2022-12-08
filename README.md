@@ -1,7 +1,7 @@
 # Cicero-NLP
 
 
-## The Cicero Dataset
+## The Cicero Database
 
 The [Cicero database](https://cicero.azavea.com/docs/) is a comprehensive, highly-accurate database of elected officials and legislative districts in 9 countries worldwide. It is made from public information that can be found on official government websites, and the information is organizedwell-separated into different categories. Those categories include names, phone numbers, fax numbers, and other contact information plus social media identifiers. The source URLs from official government websites are also incorporated into the dataset. Historically, this large dataset of over 57,000 historical and current officials was collected and managed via  extensive human annotation and data entry efforts. A sample of the Cicero Dataset is shown below.
 
