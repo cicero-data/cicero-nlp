@@ -1,5 +1,6 @@
 # Cicero-NLP
 
+![projectStructure](image/README/projectStructure.png)
 
 ## The Cicero Database
 
