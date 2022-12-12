@@ -13,22 +13,25 @@ special dependencies:
 
 '''
 
-import spacy
-from spacy.util import filter_spans
-from spacy.tokens import Doc, DocBin
-import collections
-from tqdm import tqdm
-import re
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from pathlib import Path
 import argparse
+import collections
+import json
+import os
+import re
+from pathlib import Path
 
-def get_parser(
-    parser=argparse.ArgumentParser(
-        description="to BIO tagging on the pure texts for the modelB, which convers information including saluation, party, state, county, and city. The output file will be in the format of spaCy Doc file."
-    ),
-):
+import pandas as pd
+import spacy
+from sklearn.model_selection import train_test_split
+from spacy.tokens import Doc, DocBin
+from spacy.util import filter_spans
+from tqdm import tqdm
+
+
+def get_parser(parser=argparse.ArgumentParser(
+    description=
+    "to BIO tagging on the pure texts for the modelB, which convers information including saluation, party, state, county, and city. The output file will be in the format of spaCy Doc file."
+),):
     parser.add_argument(
         "--input_json",
         type=str,
@@ -61,18 +64,18 @@ def get_parser(
     )
     return parser
 
+
 def bio_tag(args):
     # detect if the output directory exists
     if not os.path.exists(args.output):
         os.makedirs(args.output)
 
     # load the Cicero dataset
-    cicero_df = pd.read_csv(args.input_csv,  error_bad_lines=False)
-
+    cicero_df = pd.read_csv(args.input_csv, error_bad_lines=False)
 
     # load the pure texts of the webpages
     with open(args.input_json, "r") as f:
-        pure_text_dict = json.load(f)    
+        pure_text_dict = json.load(f)
 
     # load the external file that stores the US states information
     state_df = pd.read_csv(args.state)
@@ -80,9 +83,9 @@ def bio_tag(args):
     state_full = state_df["full_name"].tolist()
     state_dict = dict(zip(state_abbr, state_full))
 
+    nlp = spacy.load('en_core_web_sm')
     # bio tagging
     # the output will be stored in the list first and then save as the spaCy Doc file
-    nlp = spacy.load('en_core_web_sm')
     tagged_data = []
 
     for n in tqdm(range(len(cicero_df))):
@@ -98,12 +101,15 @@ def bio_tag(args):
 
         ruler = nlp.add_pipe("span_ruler")
         bio_tag_pattern_list = []
-       
+
         # reference: https://spacy.io/usage/rule-based-matching
         if "salutation" in information_unit.keys():
             salutation = information_unit["salutation"]
-            bio_tag_pattern_list.append({"label": "SALUTATION", "pattern": salutation})
-        
+            bio_tag_pattern_list.append({
+                "label": "SALUTATION",
+                "pattern": salutation
+            })
+
         if "party" in information_unit.keys():
             party = information_unit["party"]
             bio_tag_pattern_list.append({"label": "PARTY", "pattern": party})
@@ -114,7 +120,12 @@ def bio_tag(args):
             # get the full name of the state
             if state in state_abbr:
                 state_full_name = state_dict[state]
-                bio_tag_pattern_list.append({"label":'STATE_F', 'pattern':[{'LOWER':state_full_name.lower()}]})
+                bio_tag_pattern_list.append({
+                    "label": 'STATE_F',
+                    'pattern': [{
+                        'LOWER': state_full_name.lower()
+                    }]
+                })
 
         if "secondary_state" in information_unit.keys():
             state = information_unit["secondary_state"]
@@ -122,12 +133,17 @@ def bio_tag(args):
             # get the full name of the state
             if state in state_abbr:
                 state_full_name = state_dict[state]
-                bio_tag_pattern_list.append({"label":'STATE_F', 'pattern':[{'LOWER':state_full_name.lower()}]})
+                bio_tag_pattern_list.append({
+                    "label": 'STATE_F',
+                    'pattern': [{
+                        'LOWER': state_full_name.lower()
+                    }]
+                })
 
         if "primary_county" in information_unit.keys():
             county = information_unit["primary_county"]
             bio_tag_pattern_list.append({"label": "COUNTY", "pattern": county})
-        
+
         if "secondary_county" in information_unit.keys():
             county = information_unit["secondary_county"]
             bio_tag_pattern_list.append({"label": "COUNTY", "pattern": county})
@@ -139,16 +155,16 @@ def bio_tag(args):
         if "secondary_city" in information_unit.keys():
             city = information_unit["secondary_city"]
             bio_tag_pattern_list.append({"label": "CITY", "pattern": city})
-        
+
         ruler.add_patterns(bio_tag_pattern_list)
         doc = nlp(pure_text)
-        length = len(doc)//100
-        for n in range(length+1):
-            sub_doc = nlp(str(doc[n*100:(n+1)*100]))
+        length = len(doc) // 100
+        for n in range(length + 1):
+            sub_doc = nlp(str(doc[n * 100:(n + 1) * 100]))
             # the filter_spans function is used to remove the overlapping entities
             sub_doc.ents = filter_spans(sub_doc.spans["ruler"])
             tagged_data.append(sub_doc)
-        
+
         # remove the ruler and initialize a new one for each politician/data point
         nlp.remove_pipe("span_ruler")
 
@@ -156,7 +172,9 @@ def bio_tag(args):
     tagged_data = [doc for doc in tagged_data if len(doc) > 0]
 
     # split the tagged data into training set and test set
-    train, dev = train_test_split(tagged_data, test_size = args.ratio, random_state=42)
+    train, dev = train_test_split(tagged_data,
+                                  test_size=args.ratio,
+                                  random_state=42)
 
     train_db = DocBin()
     for n in train:
@@ -167,6 +185,7 @@ def bio_tag(args):
     for n in dev:
         dev_db.add(n)
     dev_db.to_disk(args.output / "dev.spacy")
+
 
 if __name__ == "__main__":
     args = get_args().parse_args()

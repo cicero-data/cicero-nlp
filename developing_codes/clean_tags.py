@@ -1,20 +1,24 @@
 '''
 This file is used to clean the tags in the webpages stored in the target directory,
 and save the cleaned webpages into a json file.
+The extracted emails will also be saved into a json file and will be used for creating the synthetic email dataset.
 '''
-import json
-import collections
-import os
-import glob
-from tqdm import tqdm
-from bs4 import BeautifulSoup
 import argparse
+import collections
+import glob
+import json
+import os
+import re
+from pathlib import Path
 
-def get_parser(
-    parser=argparse.ArgumentParser(
-        description="to clean the tags in the webpages stored in the target directory, and save the cleaned webpages into a json file."
-    ),
-):
+from bs4 import BeautifulSoup
+from tqdm import tqdm
+
+
+def get_parser(parser=argparse.ArgumentParser(
+    description=
+    "to clean the tags in the webpages stored in the target directory, and save the cleaned webpages into a json file."
+),):
     parser.add_argument(
         "--input",
         type=str,
@@ -23,38 +27,52 @@ def get_parser(
     )
     parser.add_argument(
         "--output",
-        type=str,
-        default="cleaned_webpages.json",
-        help="the output file name to save the cleaned webpages",
+        type=Path,
+        default="./cleaned_texts",
+        help="the output folder to save the cleaned texts and extracted emails",
     )
     return parser
 
-def remove_tags(html):
+
+def remove_tags_and_extract_emails(html):
     # parse html content
     soup = BeautifulSoup(html, "html.parser")
-  
+
+    # extract emails
+    pattern = re.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+")
+    emails = re.findall(pattern, str(soup))
+
     for data in soup(['style', 'script']):
         # Remove style and script part
         data.decompose()
-  
+
     # return data by retrieving the tag content
-    return ' '.join(soup.stripped_strings)
-    
+    return ' '.join(soup.stripped_strings), emails
+
 
 def clean_and_save(args):
-    # create the cleaned webpages
-    cleaned_webpages = collections.defaultdict()
+    # create the dictionary for pure_texts
+    pure_texts = collections.defaultdict()
+    # create the dictionary for extracted_emails
+    extracted_emails = collections.defaultdict()
 
-    # clean the webpages
-    for file in tqdm(glob.glob(f"{args.input}/*.html")):
+    # iterating
+    for file in tqdm(glob.glob(f"{input}/*.html")):
         politician_id = file.split("/")[-1].split(".")[0]
         with open(file, "r") as f:
             html = f.read()
-            cleaned_webpages[politician_id] = remove_tags(html)
-    
+            texts, emails = remove_tags_and_extract_emails(html)
+            pure_texts[politician_id] = texts
+            extracted_emails[politician_id] = emails
+
     # save the cleaned webpages
-    with open(args.output, "w") as f:
-        json.dump(cleaned_webpages, f)
+    with open(output / "pure_texts.json", "w") as f:
+        json.dump(pure_texts, f)
+
+    # save the cleaned webpages
+    with open(output / 'extracted_emails.json', "w") as f:
+        json.dump(extracted_emails, f)
+
 
 if __name__ == "__main__":
     args = get_parser().parse_args()
