@@ -1,16 +1,16 @@
 # Cicero-NLP
 
-![projectStructure](image/README/projectStructure.png)
+![1670809063893](image/README/1670809063893.png)
 
 ## The Cicero Database
 
-The [Cicero database](https://cicero.azavea.com/docs/) is a comprehensive, highly-accurate database of elected officials and legislative districts in 9 countries worldwide. It is made from public information that can be found on official government websites, and the information is organizedwell-separated into different categories. Those categories include names, phone numbers, fax numbers, and other contact information plus social media identifiers. The source URLs from official government websites are also incorporated into the dataset. Historically, this large dataset of over 57,000 historical and current officials was collected and managed via  extensive human annotation and data entry efforts. A sample of the Cicero Dataset is shown below.
+The [Cicero database](https://cicero.azavea.com/docs/) is a comprehensive, highly-accurate database of elected officials and legislative districts in 9 countries worldwide. It is made from public information that can be found on official government websites, and the information is organizedwell-separated into different categories. Those categories include names, phone numbers, fax numbers, and other contact information plus social media identifiers. The source URLs from official government websites are also incorporated into the dataset. Historically, this large dataset of over 57,000 historical and current officials was collected and managed via  extensive human annotation and data entry efforts. A sample of the Cicero Database is shown below.
 
 ![ciceroSample](image/README/ciceroSample.png)
 
 ## Data Processing
 
-We have conduct three steps of data processing to make the Cicero dataset ready to use:
+We have conduct three steps of data processing to make the Cicero Database ready to use:
 
 1. Scrape origin webpages
 
@@ -37,13 +37,7 @@ There are four components needed for training an Name Entity Recognition(NER) mo
 
 `base_config.cfg` is the blueprint of the config files that store all the settings and hyperparameters for training. It is used to generate the real config files, `config.cfg`, by using terminal commands.
 
-We have two types of `base_config.cfg` — one is for light spaCy model, the another one is for spaCy transformer model.
-
-The light cpu `base_config.cfg` can be found at:
-
-The transformer gpu `base_config.cfg` can be found at
-
-You can create and specify your own base_config.cfg file at the [spaCy&#39;s offical training information page](https://spacy.io/usage/training).
+You can create and specify your own base_config.cfg file at the [spaCys offical training information page](https://spacy.io/usage/training).
 
 #### Monitor Training with wandb
 
@@ -54,7 +48,7 @@ You can add the fellowing codes at the very end of the `base_config.cfg file` to
 ```
 [training.logger]
 @loggers = "spacy.WandbLogger.v3"
-project_name = "spacy_merge_model"
+project_name = "<your project name>"
 model_log_interval = 1000
 remove_config_values = []
 log_dataset_dir = null
@@ -62,7 +56,7 @@ entity = null
 run_name = null
 ```
 
-Our sample base_config file with those lines added can be found at:
+Our sample base_config file with those lines added can be found at [here](/sample/config/base_config.cfg).
 
 You can refer to this wandb's [article](https://wandb.ai/wandb/wandb_spacy_integration/reports/Reproducible-spaCy-NLP-Experiments-with-Weights-Biases--Vmlldzo4NjM2MDk) and [colab notebook](https://colab.research.google.com/github/wandb/examples/blob/master/colabs/spacy/SpaCy_v3_and_W%26B.ipynb#scrollTo=QT5YtRqQN6aX) for futher detials.
 
@@ -74,11 +68,11 @@ You can refer to this wandb's [article](https://wandb.ai/wandb/wandb_spacy_integ
 !python -m spacy init fill-config ./base_config.cfg ./config.cfg
 ```
 
-Our sample config file can be found at:
+Our sample config file can be found at [here](/sample/config/config.cfg).
 
 ### train.spacy and dev.spacy
 
-The `train.spacy` and `dev.spacy` are the data for training and evaluating. The files with `spacy` extension is compilable with training in spaCy and spaCy models. The detialed process of creating these two files can be found in our developing codes.
+The `train.spacy` and `dev.spacy` are the data for training and evaluating. The files with `spacy` extension is compilable with training in spaCy and spaCy models. The detialed process of creating these two files can be found in our codes of BIO tagging.
 
 In short, the spacy file can be created and read as fellowing.
 
