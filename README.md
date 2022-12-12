@@ -1,6 +1,6 @@
 # Cicero-NLP
 
-![1670809063893](image/README/1670809063893.png)
+![projectStructure](image/README/projectStructure.png)
 
 ## The Cicero Database
 
@@ -65,7 +65,7 @@ You can refer to this wandb's [article](https://wandb.ai/wandb/wandb_spacy_integ
 `config.cfg` is the real configuretion file used to specify training settings and hyperparameters. It is generated from `base_config.cfg` by using the below command.
 
 ```
-!python -m spacy init fill-config ./base_config.cfg ./config.cfg
+python -m spacy init fill-config ./base_config.cfg ./config.cfg
 ```
 
 Our sample config file can be found at [here](/sample/config/config.cfg).
