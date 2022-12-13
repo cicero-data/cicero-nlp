@@ -117,6 +117,7 @@ def random_choice_and_tag(args):
     email_list = cicero_df['extracted_email'].tolist()
     email_list = [str(n) for n in email_list]
 
+    nlp = spacy.load('en_core_web_sm')
     #random selecting and bio_tagging
     inserted_data = []
     for n in tqdm(range(len(cicero_df))):
@@ -169,10 +170,10 @@ def random_choice_and_tag(args):
         nlp.remove_pipe("span_ruler")
 
     # remove the empty data point
-    interted_data = [doc for doc in interted_data if len(doc) > 0]
+    inserted_data = [doc for doc in inserted_data if len(doc) > 0]
 
     # split the tagged data into training set and test set
-    train, dev = train_test_split(tagged_data,
+    train, dev = train_test_split(inserted_data,
                                   test_size=args.ratio,
                                   random_state=42)
 
@@ -188,5 +189,5 @@ def random_choice_and_tag(args):
 
 
 if __name__ == "__main__":
-    args = get_args().parse_args()
+    args = get_parser().parse_args()
     random_choice_and_tag(args)

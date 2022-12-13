@@ -110,7 +110,7 @@ def bio_tag(args):
 
     # load the pure texts of the webpages
     with open(args.input_json, "r") as f:
-        data = json.load(f)
+        pure_text_dict = json.load(f)
 
     nlp = spacy.load('en_core_web_sm')
     # bio tagging
@@ -218,5 +218,5 @@ def bio_tag(args):
 
 
 if __name__ == "__main__":
-    args = get_args().parse_args()
+    args = get_parser().parse_args()
     bio_tag(args)

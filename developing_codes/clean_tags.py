@@ -51,13 +51,17 @@ def remove_tags_and_extract_emails(html):
 
 
 def clean_and_save(args):
+    # detect if the output directory exists
+    if not os.path.exists(args.output):
+        os.makedirs(args.output)
+    
     # create the dictionary for pure_texts
     pure_texts = collections.defaultdict()
     # create the dictionary for extracted_emails
     extracted_emails = collections.defaultdict()
 
     # iterating
-    for file in tqdm(glob.glob(f"{input}/*.html")):
+    for file in tqdm(glob.glob(f"{args.input}/*.html")):
         politician_id = file.split("/")[-1].split(".")[0]
         with open(file, "r") as f:
             html = f.read()
@@ -66,11 +70,11 @@ def clean_and_save(args):
             extracted_emails[politician_id] = emails
 
     # save the cleaned webpages
-    with open(output / "pure_texts.json", "w") as f:
+    with open(args.output / "pure_texts.json", "w") as f:
         json.dump(pure_texts, f)
 
     # save the cleaned webpages
-    with open(output / 'extracted_emails.json', "w") as f:
+    with open(args.output / 'extracted_emails.json', "w") as f:
         json.dump(extracted_emails, f)
 
 

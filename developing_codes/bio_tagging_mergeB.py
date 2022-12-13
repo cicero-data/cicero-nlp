@@ -79,8 +79,8 @@ def bio_tag(args):
 
     # load the external file that stores the US states information
     state_df = pd.read_csv(args.state)
-    state_abbr = state_df["abbreviation"].tolist()
-    state_full = state_df["full_name"].tolist()
+    state_abbr = state_df["Abbreviation"].tolist()
+    state_full = state_df["Full-Name"].tolist()
     state_dict = dict(zip(state_abbr, state_full))
 
     nlp = spacy.load('en_core_web_sm')
@@ -188,5 +188,5 @@ def bio_tag(args):
 
 
 if __name__ == "__main__":
-    args = get_args().parse_args()
+    args = get_parser().parse_args()
     bio_tag(args)
