@@ -76,8 +76,9 @@ The `train.spacy` and `dev.spacy` are the data for training and evaluating. The 
 
 In short, the spacy file can be created and read as fellowing.
 
-```
+```python
 
+# reference: https://spacy.io/api/docbin
 # prepare
 import spacy
 from spacy.tokens import DocBin
