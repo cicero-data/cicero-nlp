@@ -4,9 +4,27 @@
 
 ## The Cicero Database
 
-The [Cicero database](https://cicero.azavea.com/docs/) is a comprehensive, highly-accurate database of elected officials and legislative districts in 9 countries worldwide. It is made from public information that can be found on official government websites, and the information is organized and well-separated into different categories. Those categories include names, phone numbers, fax numbers, and other contact information plus social media identifiers. The source URLs from official government websites are also incorporated into the dataset. Historically, this large dataset of over 57,000 historical and current officials was collected and managed via extensive human annotation and data entry efforts. A sample of the Cicero Database is shown below.
+The [Cicero Database](https://cicero.azavea.com/docs/) is a comprehensive, highly-accurate database of elected officials and legislative districts in 9 countries worldwide. It is made from public information that can be found on official government websites, and the information is organized and well-separated into different categories. Those categories include names, phone numbers, fax numbers, and other contact information plus social media identifiers. The source URLs from official government websites are also incorporated into the dataset. Historically, this large dataset of over 57,000 historical and current officials was collected and managed via extensive human annotation and data entry efforts. A sample of the Cicero Database is shown below.
 
 ![ciceroSample](image/README/ciceroSample.png)
+
+## Dataset Dependencies
+
+In the process of generating our synthetic address dataset, we utilized two external datasets:
+
+1. [Hewlett ASAP essay dataset](https://www.kaggle.com/competitions/asap-aes/overview)
+2. [CoNLL 2003 dataset](https://www.clips.uantwerpen.be/conll2003/ner/)
+
+The CoNLL 2003 needs some preprocessing to change its format and be compatible with our src code.
+
+```bath
+# reference: https://github.com/practical-nlp/practical-nlp-code/blob/master/Ch5/04_NER_using_spaCy%20-%20CoNLL.ipynb
+mkdir ./conll2003
+python -m spacy convert "train.txt" conll2003 -c ner
+python -m spacy convert "test.txt" conll2003 -c ner
+python -m spacy convert "valid.txt" conll2003 -c ner
+
+```
 
 ## Data Processing
 
@@ -22,7 +40,7 @@ We have conducted three steps of data processing to make the Cicero Database rea
 
    This step is to BIO tag the interesting information in the pure texts. This step will generate `train.spacy` and `dev.spacy`, which will be used as the training set and the developing set.
 
-The codes for conducting these three steps can be found in the [developing_codes](/developing_codes).
+The codes for conducting these three steps can be found in the [src](/src).
 
 ## Training Models with spaCy
 
@@ -37,7 +55,7 @@ There are four components needed for training a Name Entity Recognition(NER) mod
 
 `base_config.cfg` is the blueprint of the config files that store all the settings and hyperparameters for training. It is used to generate the real config files, `config.cfg`, by using terminal commands.
 
-You can create and specify your own base_config.cfg file at the [spaCy's official training information page](https://spacy.io/usage/training).
+You can create and specify your own base_config.cfg file at the [spaCy&#39;s official training information page](https://spacy.io/usage/training).
 
 #### Monitor Training with wandb
 
