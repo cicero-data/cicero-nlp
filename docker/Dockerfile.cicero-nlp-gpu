@@ -8,7 +8,6 @@ WORKDIR /train
 COPY spacy-wrapper-gpu.sh /train/spacy-wrapper-gpu.sh
 
 ## set up wandb
-RUN ["wandb", "login", "1b07bca30600e9459ea297f08870c2f3da0c4c52"]
-RUN ["wandb", "offline"]
+RUN ["wandb", "login", "YOUR_OWN_WANDB_KEY"]
 
 ENTRYPOINT ["/train/spacy-wrapper-gpu.sh"]
