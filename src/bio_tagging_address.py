@@ -3,13 +3,13 @@ This file is used to BIO tagging on the address information. One synthetic datas
 
 The output file will be in the format of spaCy Doc file.
 
-special tricks applied: 
+special tricks applied:
 1. insert the address together into the essays in the Hewlett ASAP essay dataset dataset.
 2. insert the entities from the CoNLL 2003 dataset entities dataset into the essays in the essay dataset, to increase the difficulty of the task.
 
 special dependencies:
 1. Hewlett ASAP essay dataset
-2. CoNLL 2003 dataset 
+2. CoNLL 2003 dataset
 
 '''
 import argparse

@@ -4,7 +4,7 @@ phone numbers and fax numbers.
 
 The output file will be in the format of spaCy Doc file.
 
-special tricks applied: 
+special tricks applied:
 1. use the regex to tag the phone numbers and fax numbers with multiple formats
    the spaCy ruler support tag with regex but the behavior is not exactly same as the vanilla regex.
    the vanilla regex is used to solve the problem.
@@ -69,11 +69,11 @@ def regex_search(web_content, unit, search_attribute, label, pattern_list,
     Args:
         web_content: the content where we want to search information.
         unit: the dictionary contains all the attribute.
-        search_attribute: the attribute's name. 
+        search_attribute: the attribute's name.
         label: the name of the label for the attribute.
         pattern_list: the pattern list which will be added to ruler.
         error_log:the dictionary to store the error instance.
-    
+
     Returns:
         None
     """

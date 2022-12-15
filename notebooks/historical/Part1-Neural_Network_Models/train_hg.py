@@ -28,22 +28,22 @@ def get_parser(
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_dir", type=str, default="data",
                         help="data directory")
-    parser.add_argument("--model_name", type=str, default="bert-base-uncased", 
+    parser.add_argument("--model_name", type=str, default="bert-base-uncased",
                         help="model name")
     parser.add_argument("--batch_size", type=int, default=16,
-                        help="batch size") 
+                        help="batch size")
     parser.add_argument("--epochs", type=int, default=3,
-                        help="number of epochs")    
+                        help="number of epochs")
     parser.add_argument("--lr", type=float, default=1e-5,
-                        help="learning rate")       
+                        help="learning rate")
     parser.add_argument("--seed", type=int, default=42,
                         help="random seed")
     parser.add_argument("--device", type=str, default='cuda'if torch.cuda.is_available() else 'cpu',
-                        help="device to use") 
+                        help="device to use")
     parser.add_argument("--save_dir", type=str, default=os.getcwd() + "/models",
                         help="directory to save model")
     parser.add_argument("--wandb", action="store_true", help='whether to use wandb')
-    
+
     return parser
 
 '''
@@ -74,8 +74,8 @@ def load_data(args):
     train_testvalid = dataset.shuffle(seed=args.seed).train_test_split(0.2)
     test_vaild = train_testvalid['test'].train_test_split(0.5)
     dataset_dict =DatasetDict({
-                            'train': train_testvalid['train'], 
-                            'valid': test_vaild['train'], 
+                            'train': train_testvalid['train'],
+                            'valid': test_vaild['train'],
                             'test': test_vaild['test']})
 
     return dataset_dict
@@ -89,7 +89,7 @@ def preprocess_data(args, dataset_dict, tokenizer):
 
 
 def tokenize_and_align_labels(examples, tokenizer):
-    tokenized_inputs = tokenizer(examples["words"], truncation=True, 
+    tokenized_inputs = tokenizer(examples["words"], truncation=True,
                                                     is_split_into_words=True,)
     label_all_tokens = True
     labels = []
@@ -153,7 +153,7 @@ def main(args):
     save_path = Path(args.save_dir)
     save_path.mkdir(parents=True, exist_ok=True)
     print(f"the model will be saved to {save_path}")
-    
+
     ## wandb
     if args.wandb: wandb.init(project="vanilaNER", config = args, save_code = True)
 
@@ -201,9 +201,9 @@ def main(args):
 
     results = metric.compute(predictions=true_predictions, references=true_labels)
     print(results)
-    if args.wandb: wandb.login({'test/precision': results["overall_precision"], 
-                                'test/recall': results["overall_recall"], 
-                                'test/f1': results["overall_f1"], 
+    if args.wandb: wandb.login({'test/precision': results["overall_precision"],
+                                'test/recall': results["overall_recall"],
+                                'test/f1': results["overall_f1"],
                                 'test/accuracy': results["overall_accuracy"]})
 
 if __name__ == '__main__':

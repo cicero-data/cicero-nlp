@@ -30,24 +30,24 @@ def get_parser(
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_dir", type=str, default="data",
                         help="data directory")
-    parser.add_argument("--model_name", type=str, default="bert-base-uncased", 
+    parser.add_argument("--model_name", type=str, default="bert-base-uncased",
                         help="model name")
     parser.add_argument("--max_len", type=int, default=128,
                         help="max length of input sequence")
     parser.add_argument("--batch_size", type=int, default=32,
-                        help="batch size") 
+                        help="batch size")
     parser.add_argument("--epochs", type=int, default=3,
-                        help="number of epochs")    
+                        help="number of epochs")
     parser.add_argument("--lr", type=float, default=1e-5,
-                        help="learning rate")       
+                        help="learning rate")
     parser.add_argument("--seed", type=int, default=42,
                         help="random seed")
     parser.add_argument("--device", type=str, default='cuda'if torch.cuda.is_available() else 'cpu',
-                        help="device to use") 
+                        help="device to use")
     parser.add_argument("--save_dir", type=str, default=os.getcwd() + "./models",
                         help="directory to save model")
     parser.add_argument("--wandb", action="store_true", help='whether to use wandb')
-    
+
     return parser
 
 '''
@@ -75,9 +75,9 @@ def tokenize_and_align_labels(examples, tokenizer):
     function to tokenize the words and align the labels with the tokens
     '''
 
-    tokenized_inputs = tokenizer(examples["words"], truncation=True, 
-                                                    is_split_into_words=True, 
-                                                    padding="max_length", 
+    tokenized_inputs = tokenizer(examples["words"], truncation=True,
+                                                    is_split_into_words=True,
+                                                    padding="max_length",
                                                     max_length=args.max_len)
     label_all_tokens = True
 
@@ -153,8 +153,8 @@ def load_data(args):
     train_testvalid = dataset.shuffle(seed=args.seed).train_test_split(0.2)
     test_vaild = train_testvalid['test'].train_test_split(0.5)
     dataset_dict =DatasetDict({
-                            'train': train_testvalid['train'], 
-                            'valid': test_vaild['train'], 
+                            'train': train_testvalid['train'],
+                            'valid': test_vaild['train'],
                             'test': test_vaild['test']})
 
     return dataset_dict
@@ -216,7 +216,7 @@ def train(args):
                 current_result = compute_metrics(outputs.logits, labels)
                 print(current_result)
                 if args.wandb: wandb.log({'train/loss': total_loss / (step + 1),'train/f1': current_result['overall_f1'],
-                                        'train/precision': current_result['overall_precision'], 
+                                        'train/precision': current_result['overall_precision'],
                                         'train/recall': current_result['overall_recall'],
                                         'train/accuracy': current_result['overall_accuracy']})
 
@@ -237,7 +237,7 @@ def train(args):
                 current_result = compute_metrics(outputs.logits, labels)
                 print(current_result)
                 if args.wandb: wandb.log({'eval/loss': total_loss / (step + 1),'eval/f1': current_result['overall_f1'],
-                                        'eval/precision': current_result['overall_precision'], 
+                                        'eval/precision': current_result['overall_precision'],
                                         'eval/recall': current_result['overall_recall'],
                                         'eval/accuracy': current_result['overall_accuracy']})
         torch.save(model, os.path.join(args.save_dir, f'epoch{epoch}.pt'))

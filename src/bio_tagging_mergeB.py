@@ -4,7 +4,7 @@ party, state, county, and city. The output file will be in the format of spaCy D
 
 The output file will be in the format of spaCy Doc file.
 
-special tricks applied: 
+special tricks applied:
 1. use the external file that stores the US states information to tag the abbreviation and full name of the state information.
     the abbreviation will be tagged as "STATE", and the full name will be tagged as "STATE_F".
 
