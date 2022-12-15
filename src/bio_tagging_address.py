@@ -4,13 +4,12 @@ This file is used to BIO tagging on the address information. One synthetic datas
 The output file will be in the format of spaCy Doc file.
 
 special tricks applied: 
-1. insert the address together into the essays in the essay dataset
-2. insert the entities from the CoNLL 2003 entities dataset into the essays in the essay dataset, to increase the difficulty of the task
-
+1. insert the address together into the essays in the Hewlett ASAP essay dataset dataset.
+2. insert the entities from the CoNLL 2003 dataset entities dataset into the essays in the essay dataset, to increase the difficulty of the task.
 
 special dependencies:
-1. one essay dataset
-2. CoNLL 2003 dataset
+1. Hewlett ASAP essay dataset
+2. CoNLL 2003 dataset 
 
 '''
 import argparse
@@ -31,9 +30,8 @@ from tqdm import tqdm
 
 
 def get_parser(parser=argparse.ArgumentParser(
-    description=
-    "to BIO tagging on the address information. One synthetic dataset will be created."
-),):
+    description='to BIO tagging on the address information. '
+    'One synthetic dataset will be created.'),):
     parser.add_argument(
         "--input_csv",
         type=str,

@@ -17,8 +17,8 @@ from tqdm import tqdm
 
 def get_parser(parser=argparse.ArgumentParser(
     description=
-    "to clean the tags in the webpages stored in the target directory, and save the cleaned webpages into a json file."
-),):
+    'to clean the tags in the webpages stored in the target directory, '
+    'and save the cleaned webpages into a json file.'),):
     parser.add_argument(
         "--input",
         type=str,
@@ -54,7 +54,7 @@ def clean_and_save(args):
     # detect if the output directory exists
     if not os.path.exists(args.output):
         os.makedirs(args.output)
-    
+
     # create the dictionary for pure_texts
     pure_texts = collections.defaultdict()
     # create the dictionary for extracted_emails

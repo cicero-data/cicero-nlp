@@ -16,9 +16,8 @@ from tqdm import tqdm
 
 
 def get_parser(parser=argparse.ArgumentParser(
-    description=
-    "to scrape the webpages by using the url address stored in the Cicero dataset."
-),):
+    description='to scrape the webpages by using the url address'
+    'stored in the Cicero dataset.'),):
     parser.add_argument(
         "--input",
         type=str,

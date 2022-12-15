@@ -29,9 +29,9 @@ from tqdm import tqdm
 
 
 def get_parser(parser=argparse.ArgumentParser(
-    description=
-    "to BIO tagging on the pure texts for the modelB, which covers information including salutation, party, state, county, and city. The output file will be in the format of spaCy Doc file."
-),):
+    description='to BIO tagging on the pure texts for the modelB, '
+    'which covers information including salutation, party, state, county, and city. '
+    'The output file will be in the format of spaCy Doc file.'),):
     parser.add_argument(
         "--input_json",
         type=str,
